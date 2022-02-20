@@ -21,8 +21,8 @@ def test_instrument_trade(market_name, instrument_name):
     try:
         if obj.is_element_displayed(instrument_locator):
             instrument_trade_locator = market.instrument_trade()
+            time.sleep(2)
             obj.click_element(instrument_trade_locator)
-            time.sleep(10)
         else:
             obj.scroll_down(300)
     finally:

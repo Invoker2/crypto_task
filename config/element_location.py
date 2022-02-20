@@ -20,7 +20,7 @@ class Markets:
         return instrument_trade_locator
 
 if __name__ == "__main__":
-    market = Markets("USDT", "BTC")
+    market = Markets("USDT", "ZIL")
     market_group_nav = market.market_group_nav()
     print(market_group_nav)
     instrument_trade = market.instrument_trade()
