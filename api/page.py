@@ -9,6 +9,7 @@ class Page:
         self.driver = webdriver.Chrome()
 
     def open(self,url):
+        self.driver.implicitly_wait(20)
         self.driver.get(url)
         self.driver.maximize_window()
 
@@ -34,7 +35,8 @@ class Page:
         try:
             wait = WebDriverWait(self.driver,timeout = 10)
             wait.until(lambda x:x.find_element_by_xpath(locator).is_displayed())
-            return self.driver.find_element_by_xpath(locator).click()
+            element_loc = self.driver.find_element_by_xpath(locator)
+            self.driver.execute_script("arguments[0].click();", element_loc)
         except TimeoutException:
             self.driver.save_screenshot("image/cappture_%s.ppng"%datetime.datetime.now())
             raise Exception("Time out")
