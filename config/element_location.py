@@ -16,10 +16,12 @@ class Markets:
         return instrument_locator
 
     def instrument_trade(self):
-        instrument_trade_locator = """//div[@class="trade-list"]//div[@class="instrument"]//span[text()="%s"]/../../../../../td[last()]"""%self.instrument_name
+        instrument_trade_locator = """//div[@class="trade-list"]//div[@class="instrument"]//span[text()="%s"]/../../../../../td[last()]//button[@type="button"]"""%self.instrument_name
         return instrument_trade_locator
 
 if __name__ == "__main__":
     market = Markets("USDT", "BTC")
     market_group_nav = market.market_group_nav()
     print(market_group_nav)
+    instrument_trade = market.instrument_trade()
+    print(instrument_trade)
