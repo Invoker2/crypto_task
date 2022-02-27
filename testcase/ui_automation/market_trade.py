@@ -1,28 +1,45 @@
-from selenium import webdriver
 from page import Page
 import time
 import pytest
 from element_location import Markets
+from logger import logger
 
 
-@pytest.mark.parametrize("market_name, instrument_name",
-                         [
-                             # ("USDT","BTC"),
-                             ("USDT","ZIL"),
-                         ])
-def test_instrument_trade(market_name, instrument_name):
-    url = "https://crypto.com/exchange/markets"
-    obj = Page()
-    obj.open(url)
-    market = Markets(market_name, instrument_name)
-    market_group_nav = market.market_group_nav()
-    obj.click_element(market_group_nav)
-    instrument_locator = market.instrument_loc()
-    try:
-        if obj.is_element_displayed(instrument_locator):
-            instrument_trade_locator = market.instrument_trade()
-            obj.click_element(instrument_trade_locator)
+class TestMarketTrade:
+    driver = None
+    market_url = "https://crypto.com/exchange/markets"
+
+    def setup_class(self):
+        # initiate chrome
+        self.driver = Page()
+
+    def teardown_class(self):
+        # driver close
+        self.driver.exit()
+        logger.info("[Tear Down]: Close driver and quit")
+
+
+    def setup(self):
+        # navigate to page
+        self.driver.open(self.market_url)
+        logger.info(f"[Set Up]: Open driver and navigate to {self.market_url}")
+
+    def teardown(self):
+        pass
+
+    @pytest.mark.parametrize("market_name, instrument_name",
+                             [
+                                 ("USDT", "ZIL"),
+                                 ("USDT", "BTC")
+                             ])
+    def test_instrument_trade(self, market_name, instrument_name):
+        market = Markets(market_name, instrument_name)
+        self.driver.click_element(market.market_group_nav)
+        if self.driver.is_element_displayed(market.instrument_loc):
+            logger.info("Element is visible, continue checking ...")
+            self.driver.click_element(market.instrument_trade)
+            # time.sleep(20)
+            assert True
         else:
-            obj.scroll_down(300)
-    finally:
-        obj.exit()
+            logger.info("Element is invisible, case failed...")
+            assert False
